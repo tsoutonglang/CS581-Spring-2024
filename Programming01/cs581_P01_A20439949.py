@@ -5,8 +5,8 @@ import sys
 import csv
 import random
 import math
-import copy
 import time
+import matplotlib.pyplot as plt
 
 # get the state info (the state label and cartesian coordinates)
 def read_file(filename):
@@ -22,7 +22,7 @@ def read_file(filename):
         sys.exit(1)
 
 # define cost function
-def cost(solution):
+def cost_func(solution):
     total_cost = 0
     for i in range(len(solution) - 1):
         x1, y1 = float(solution[i][1]), float(solution[i][2])
@@ -46,14 +46,14 @@ def exponential_schedule(init_temp, alpha, iteration):
 
 def simulated_annealing(init_sol, init_temp, alpha):
     solution = init_sol
-    current_cost = cost(init_sol)
+    current_cost = cost_func(init_sol)
     temp = init_temp
     iterations = 0
     start_time = time.perf_counter()
 
     while temp > 0:
         new_solution = two_edge_swap(solution)
-        new_cost = cost(new_solution)
+        new_cost = cost_func(new_solution)
 
         # calculate the change in cost
         delta_cost = new_cost - current_cost
@@ -117,34 +117,35 @@ p1 = float(sys.argv[3])
 # Genetic Algorithm: P2 is the mutation probability Pm value
 p2 = float(sys.argv[4])
 
+# simulated_annealing(init_sol, init_temp, alpha)
 if algo == '1':
-    # simulated_annealing(state_data, init_state, init_temp, alpha)
     solution, cost, iterations, exe_time = simulated_annealing(init_sol, p1, p2)
-    
-    print(f"""Soutonglang, Tania, A20439949 solution:
-          Initial state: {init_state}
 
-          Simulated Annealing:
-          Command Line Parameters: {algo}, {p1}, {p2}
-          Initial solution: {state_data}
-          Final solution: {solution}
-          Number of iterations: {iterations}
-          Execution time: {exe_time}
-          Complete path cost: {cost}
-          """)
+    print(f"""Soutonglang, Tania, A20439949 solution:
+        Initial state: {init_state}
+
+        Simulated Annealing:
+        Command Line Parameters: {algo}, {p1}, {p2}
+        Initial solution: {state_data}
+        Final solution: {solution}
+        Number of iterations: {iterations}
+        Execution time: {exe_time}
+        Complete path cost: {cost}
+        """)
+
 elif algo == '2':
-    result = genetic_algorithm()
+    solution, cost, iterations, exe_time = genetic_algorithm(init_sol, p1, p2)
 
     print(f"""Soutonglang, Tania, A20439949 solution:
           Initial state: {init_state}
 
           Genetic Algorithm:
           Command Line Parameters: {algo}, {p1}, {p2}
-          Initial solution: LABEL1, LABEL2, LABEL3, …, LABELN-1, LABELN
-          Final solution: LABEL1, LABEL2, LABEL3, …, LABELN-1, LABELN
+          Initial solution: {state_data}
+          Final solution: {solution}
           Number of iterations: {iterations}
-          Execution time: 
-          Complete path cost: 
+          Execution time: {exe_time}
+          Complete path cost: {cost}
           """)
 else:
     print("ERROR: Invalid argument.")
